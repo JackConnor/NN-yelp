@@ -14,4 +14,6 @@ django-heroku = "*"
 [requires]
 
 python_version = "3.6"
-sklearn
+sklearn = "0.19.1"
+nltk = "3.3"
+numpy = "1.14.5"
