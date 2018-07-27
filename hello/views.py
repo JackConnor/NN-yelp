@@ -19,10 +19,10 @@ from random import randint
 
 
 wordnet_lemmatizer = WordNetLemmatizer()
-model = joblib.load('./yelppredictor/ml_models/first-model.pkl')
-stopwords = set(w.rstrip() for w in open('./yelppredictor/data_files/stopwords.txt'))
+model = joblib.load('./ml_models/first-model.pkl')
+stopwords = set(w.rstrip() for w in open('./data_files/stopwords.txt'))
 
-data = pd.read_csv('./yelppredictor/data_files/yelp_small.csv').values[:1000]
+data = pd.read_csv('./data_files/yelp_small.csv').values[:1000]
 np.random.shuffle(data)
 
 def index(request):
