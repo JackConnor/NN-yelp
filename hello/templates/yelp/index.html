@@ -1,0 +1,77 @@
+{%csrf_token%}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+      h1 {
+        color: orange;
+      }
+      #submit-btn {
+        padding: 25px 45px;
+        background-color: blue;
+        color: white;
+        border-radius: 8px;
+        display: block;
+        width: 150px;
+        margin-left: 45px;
+        text-align: center;
+        transition: opacity .2s ease-in-out;
+      }
+      #submit-btn:hover {
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Yelp Reviewer!</h1>
+    <textarea id="review" name="name" rows="8" cols="80"></textarea>
+    <div id="submit-btn">
+      submit
+    </div>
+    <div class="">
+      prediction: <span id="prediction"></span>
+    </div>
+
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      console.log($);
+
+      const getReview = (text) => {
+        $.ajax({
+          type: 'POST',
+          data: text,
+          url: '/boom/',
+          success: (data) => {
+            console.log(data);
+            console.log(data);
+            const pred = document.getElementById('prediction');
+            pred.innerText = data.prediction
+          }
+        });
+      }
+
+
+    const init = () => {
+      console.log('starting');
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.addEventListener('click', (evt) => {
+        const reviewText = document.getElementById('review').value;
+        // getReview(reviewText);
+        getReview(reviewText);
+      }, (err) => {
+        console.log(err);
+      })
+      // getReview(textArea);
+    }
+
+    init();
+
+      console.log('booooom');
+    </script>
+  </body>
+</html>

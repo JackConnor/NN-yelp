@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
-
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 
 from sklearn.externals import joblib
@@ -26,60 +26,36 @@ data = pd.read_csv('./hello/data_files/yelp_small.csv').values[:100]
 np.random.shuffle(data)
 
 def index(request):
-    # word_map = {}
-    # word_map_index = 0
-    # for review in data:
-    #     review_text_tokens = my_tokenizer(review[5])
-    #     for token in review_text_tokens:
-    #         if token not in word_map:
-    #             word_map[token] = word_map_index
-    #             if word_map_index % 10000 == 0:
-    #                 print('word map index at: ' + str(word_map_index))
-    #             word_map_index += 1
+    # return HttpResponse('./hello/templates/yelp/index.html')
+    return render(request, '../templates/yelp/index.html')
 
-    word_map = np.load('./hello/ml_models/wordmap.npy').item()
-    train = []
-    reviewCount = 0
-    for review in data:
-        if reviewCount % 10 == 0:
-            print('another ten reviews: ' + str(reviewCount))
-        reviewCount += 1
-        reviewText = review[5]
-        answerLabel = review[3]
+
+@csrf_exempt
+def boom(request):
+    if request.method == 'POST':
+        print('yessss')
+        print('yessss')
+        print('yessss')
+        print(request.body)
+        print('yessss')
+        print('yessss')
+        print('yessss')
+        word_map = np.load('./hello/ml_models/wordmap.npy').item()
+        reviewText = request.body.decode('utf-8')
         review_text_tokens = my_tokenizer(reviewText)
 
-        reviewVec = np.zeros(len(word_map) + 1)
+        reviewVec = np.zeros(len(word_map))
         currInd = 0
         for token in review_text_tokens:
-            map_ind = word_map[token]
-            reviewVec[map_ind] += 1
+            if token in word_map:
+                map_ind = word_map[token]
+                reviewVec[map_ind] += 1
             currInd += 1
-        reviewVec[-1] = answerLabel
-        train.append(reviewVec)
-    #
-    # train = np.array(train)
-    # X = train[:, :-1]
-    # Y = train[:, -1]
-    # print('Got our XY')
-    #
-    # Xtrain1 = X[:-15000,]
-    # Ytrain1 = Y[:-15000,]
-    # Xtest1 = X[-15000:,]
-    # Ytest1 = Y[-15000:,]
-    # print('about to model')
-    # model = LogisticRegression()
-    # model.fit(Xtrain1, Ytrain1)
-    # print('Classification rate: ' + str(model.score(Xtest1, Ytest1)))
-    train = np.array(train)
-    ind = randint(0, len(train))
-    print('ind: ' + str(ind))
-    singleReview = train[ind, :-1]
-    singleLabel = train[ind, -1]
-
-    print('prediction: ' + str(model.predict([singleReview])))
-    print('actual: ' + str(data[ind][3]))
-    print('text: ' + str(data[ind][5]))
-    return HttpResponse('Actual: ' + str(data[ind][3]) + '. Predicted: ' + str(int(model.predict([singleReview])[0])) + '. Text: ' + str(data[ind][5]))
+        prediction = model.predict([reviewVec])
+        print(prediction)
+        return JsonResponse({
+            "prediction": int(prediction[0])
+        })
 
 def my_tokenizer(s):
     s = s.lower()
@@ -89,7 +65,58 @@ def my_tokenizer(s):
     tokens = [t for t in tokens if t not in stopwords]
     return tokens
 
-def one_hot(num, numClasses):
-    oh = np.zeros(numClasses)
-    oh[num - 1] = 1
-    return oh
+# def index(request):
+#     # word_map = {}
+#     # word_map_index = 0
+#     # for review in data:
+#     #     review_text_tokens = my_tokenizer(review[5])
+#     #     for token in review_text_tokens:
+#     #         if token not in word_map:
+#     #             word_map[token] = word_map_index
+#     #             if word_map_index % 10000 == 0:
+#     #                 print('word map index at: ' + str(word_map_index))
+#     #             word_map_index += 1
+#
+#     word_map = np.load('./hello/ml_models/wordmap.npy').item()
+#     train = []
+#     reviewCount = 0
+#     for review in data:
+#         if reviewCount % 10 == 0:
+#             print('another ten reviews: ' + str(reviewCount))
+#         reviewCount += 1
+#         reviewText = review[5]
+#         answerLabel = review[3]
+#         review_text_tokens = my_tokenizer(reviewText)
+#
+#         reviewVec = np.zeros(len(word_map) + 1)
+#         currInd = 0
+#         for token in review_text_tokens:
+#             map_ind = word_map[token]
+#             reviewVec[map_ind] += 1
+#             currInd += 1
+#         reviewVec[-1] = answerLabel
+#         train.append(reviewVec)
+#     #
+#     # train = np.array(train)
+#     # X = train[:, :-1]
+#     # Y = train[:, -1]
+#     # print('Got our XY')
+#     #
+#     # Xtrain1 = X[:-15000,]
+#     # Ytrain1 = Y[:-15000,]
+#     # Xtest1 = X[-15000:,]
+#     # Ytest1 = Y[-15000:,]
+#     # print('about to model')
+#     # model = LogisticRegression()
+#     # model.fit(Xtrain1, Ytrain1)
+#     # print('Classification rate: ' + str(model.score(Xtest1, Ytest1)))
+#     train = np.array(train)
+#     ind = randint(0, len(train))
+#     print('ind: ' + str(ind))
+#     singleReview = train[ind, :-1]
+#     singleLabel = train[ind, -1]
+#
+#     print('prediction: ' + str(model.predict([singleReview])))
+#     print('actual: ' + str(data[ind][3]))
+#     print('text: ' + str(data[ind][5]))
+#     return HttpResponse('Actual: ' + str(data[ind][3]) + '. Predicted: ' + str(int(model.predict([singleReview])[0])) + '. Text: ' + str(data[ind][5]))
