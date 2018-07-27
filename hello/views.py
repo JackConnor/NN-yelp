@@ -19,10 +19,10 @@ from random import randint
 
 
 wordnet_lemmatizer = WordNetLemmatizer()
-model = joblib.load('./ml_models/first-model.pkl')
+model = joblib.load('/ml_models/first-model.pkl')
 stopwords = set(w.rstrip() for w in open('./data_files/stopwords.txt'))
 
-data = pd.read_csv('./data_files/yelp_small.csv').values[:1000]
+data = pd.read_csv('/data_files/yelp_small.csv').values[:1000]
 np.random.shuffle(data)
 
 def index(request):
@@ -37,7 +37,7 @@ def index(request):
     #                 print('word map index at: ' + str(word_map_index))
     #             word_map_index += 1
 
-    word_map = np.load('./yelppredictor/ml_models/wordmap.npy').item()
+    word_map = np.load('/ml_models/wordmap.npy').item()
     train = []
     reviewCount = 0
     for review in data:
