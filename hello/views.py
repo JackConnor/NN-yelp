@@ -22,7 +22,7 @@ wordnet_lemmatizer = WordNetLemmatizer()
 model = joblib.load('./hello/ml_models/first-model.pkl')
 stopwords = set(w.rstrip() for w in open('./hello/data_files/stopwords.txt'))
 
-data = pd.read_csv('./hello/data_files/yelp_small.csv').values[:10]
+data = pd.read_csv('./hello/data_files/yelp_small.csv').values[:100]
 np.random.shuffle(data)
 
 def index(request):
