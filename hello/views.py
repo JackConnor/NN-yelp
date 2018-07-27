@@ -20,7 +20,7 @@ from random import randint
 
 wordnet_lemmatizer = WordNetLemmatizer()
 model = joblib.load('./hello/ml_models/first-model.pkl')
-stopwords = set(w.rstrip() for w in open('./data_files/stopwords.txt'))
+stopwords = set(w.rstrip() for w in open('./hello/data_files/stopwords.txt'))
 
 data = pd.read_csv('./hello/data_files/yelp_small.csv').values[:1000]
 np.random.shuffle(data)
