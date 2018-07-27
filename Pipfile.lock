@@ -1,13 +1,12 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fcde904d975df68dcbe2d8d2209ccfb67c4f1385aa5b924d42baa6a2c863e025"
+            "sha256": "5c4f8fd3d4a22d33b5bb88d21f50dde3c10ed94b103280909ca71433adf01375"
         },
         "pipfile-spec": 6,
         "requires": {
             "python_version": "3.6",
-            "scikit-learn": "0.19.1",
-            "sklearn": "0.0"
+            "sklearn": "0.19.1"
         },
         "sources": [
             {
